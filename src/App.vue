@@ -1,28 +1,74 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <!-- 
+      ovde je ugradjena header komponetna,
+      da bi bila vidljiva i ista na svakoj stranici
+    -->
+    <app-header />
+    <!-- 
+      router-view je komponeta, 
+      koju dobijamo iz vueRouter paketa
+      U zavisnosti od toga koja je trenutna ruta u URL-u
+      bice prikazana odgovarajuca komponenta iz foldera Views na ovom mestu
+      npr / - home
+          /about - about
+      pogledaj route/index.js
+
+      ovoj komponenti saljemo niz objekata products
+      koje smo preuzeli iz json fajla
+    -->
+    <router-view v-bind:products="products" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import AppHeader from "./components/AppHeader";
+// MyJSON nije komponenta vec niz objekata koje uvozimo
+// iz json/index.json fajla i predstavlja nase test podatke
+import MyJSON from "./json/index.json";
 
 export default {
-  name: 'App',
+  data: function () {
+    return {
+      products: MyJSON,
+    };
+  },
   components: {
-    HelloWorld
-  }
-}
+    AppHeader,
+  },
+  created() {
+    /* 
+      U slucaju da prvi put korisnik pristupa sajtu
+      on nema za ovaj sajt jos uvek postavljen localStorage
+      zato mi ovde iniciramo prazan localStorage
+    */
+
+    if (
+      window.localStorage.korpa == undefined ||
+      window.localStorage.korpa == ""
+    ) {
+      window.localStorage.korpa = JSON.stringify([]);
+    }
+  },
+};
 </script>
 
+
+
 <style>
+
+/* 
+  na App komponenti ostavljamo style da nije scoped
+  kako bi sve komponente koristile date stilove
+ */
+body {
+  margin: 0px;
+}
+a {
+  color: inherit;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  padding-top: 50px;
 }
 </style>
+
